@@ -1,0 +1,135 @@
+@namespace("org.ga4gh.methods")
+
+protocol AnnotationMethods {
+
+import idl "common.avdl";
+import idl "methods.avdl";
+import idl "annotations.avdl";
+
+record QueryRange {
+  // One of the following.
+  string referenceId;
+  string referenceName;
+
+  long start;
+  long end;
+}
+
+/******************  /annotations/search  *********************/
+
+/**
+This request maps to the body of `POST /annotations/search` as JSON.
+*/
+record SearchAnnotationsRequest {
+  /** The annotation sets to search within. Must specify at least one. */
+  array<string> annotationSetIds;
+
+  /**
+  If specified, this query matches only annotations which overlap this range.
+  */
+  QueryRange range;
+
+  /**
+  Specifies the maximum number of results to return in a single page.
+  If unspecified, a system default will be used.
+  */
+  union { null, int } pageSize = null;
+
+  /**
+  The continuation token, which is used to page through large result sets.
+  To get the next page of results, set this parameter to the value of
+  `nextPageToken` from the previous response.
+  */
+  union { null, string } pageToken = null;
+}
+
+/** This is the response from `POST /annotations/search` expressed as JSON. */
+record SearchAnnotationsResponse {
+  /** The list of matching annotations, sorted by position. */
+  array<org.ga4gh.models.Annotation> annotations = [];
+
+  /**
+  The continuation token, which is used to page through large result sets.
+  Provide this value in a subsequent request to return the next page of
+  results. This field will be empty if there aren't any additional results.
+  */
+  union { null, string } nextPageToken = null;
+}
+
+/**
+Gets a list of `Annotation` matching the search criteria.
+
+`POST /annotations/search` must accept a JSON version of
+`SearchAnnotationsRequest` as the post body and will return a JSON version of
+`SearchAnnotationsResponse`.
+*/
+SearchAnnotationsResponse searchAnnotations(
+  /** This request maps to the body of `POST /annotations/search` as JSON. */
+  SearchAnnotationsRequest request) throws GAException;
+
+
+/******************  /annotationSets/search  *********************/
+
+/**
+This request maps to the body of `POST /annotationSets/search` as JSON.
+*/
+record SearchAnnotationSetsRequest {
+  /** The datasets to search within. Must specify at least one. */
+  array<string> datasetIds;
+
+  /**
+  If specified, only annotation sets associated with the given reference set
+  will be returned.
+  */
+  union { null, string } referenceSetId;
+
+  /**
+  If specified, only annotations sets for which a substring of the name matches
+  this string will be returned.
+  */
+  union { null, string } name;
+
+  /**
+  If non-empty, only annotation sets which have one of these types are returned.
+  */
+  array<org.ga4gh.models.Type> types;
+
+  /**
+  Specifies the maximum number of results to return in a single page.
+  If unspecified, a system default will be used.
+  */
+  union { null, int } pageSize = null;
+
+  /**
+  The continuation token, which is used to page through large result sets.
+  To get the next page of results, set this parameter to the value of
+  `nextPageToken` from the previous response.
+  */
+  union { null, string } pageToken = null;
+}
+
+/** This is the response from `POST /annotationSets/search` expressed as JSON. */
+record SearchAnnotationSetsResponse {
+  /** The list of matching annotation sets. */
+  array<org.ga4gh.models.AnnotationSet> annotationSets = [];
+
+  /**
+  The continuation token, which is used to page through large result sets.
+  Provide this value in a subsequent request to return the next page of
+  results. This field will be empty if there aren't any additional results.
+  */
+  union { null, string } nextPageToken = null;
+}
+
+/**
+Gets a list of `AnnotationSet` matching the search criteria.
+
+`POST /annotationSets/search` must accept a JSON version of
+`SearchAnnotationSetsRequest` as the post body and will return a JSON version of
+`SearchAnnotationSetsResponse`.
+*/
+SearchAnnotationSetsResponse searchAnnotationSets(
+  /** This request maps to the body of `POST /annotationSets/search` as JSON. */
+  SearchAnnotationSetsRequest request) throws GAException;
+
+}

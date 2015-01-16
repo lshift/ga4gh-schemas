@@ -1,0 +1,112 @@
+@namespace("org.ga4gh.models")
+
+protocol Annotations {
+
+import idl "common.avdl";
+
+record RangePosition {
+  string referenceId;
+  string referenceName;
+  long start;
+  long end;
+}
+
+enum Type { GENERIC, GENE, TRANSCRIPT }
+
+/**
+  An annotation set is a logical grouping of annotations which share consistent
+  type information and provenance. An example would be 'all genes from refseq'.
+*/
+record AnnotationSet {
+  /** The generated unique ID for this annotation set. */
+  string id;
+
+  /** The ID of the containing dataset. */
+  string datasetId;
+
+  /**
+    The ID of the reference set which defines the coordinate-space for this
+    set of annotations.
+  */
+  string referenceSetId;
+
+  /** The display name for this annotation set. */
+  string name;
+
+  /**
+    The source URI describing the file from which this annotation set was
+    generated, if any.
+  */
+  string sourceUri;
+
+  /** The type of annotations contained within this set. */
+  Type type;
+
+  /** A map of additional annotation set data. */
+  map<array<string>> info = {};
+}
+
+record Frame {
+  int value;
+}
+record Exon {
+  long start;
+  long end;
+  Frame frame;
+}
+record CodingSequence {
+  long start;
+  long end;
+}
+
+/**
+  A transcript represents the assertion that a particular region of the
+  reference genome may be transcribed as RNA.
+*/
+record Transcript {
+  /**
+    The annotation ID of the gene from which this transcript is transcribed.
+  */
+  string geneId;
+
+  array<Exon> exons;
+
+  CodingSequence codingSequence;
+}
+
+/**
+  An annotation describes a region of reference genome. The value of an
+  annotation may be one of several canonical types, supplemented by arbitrary
+  info tags. A variant annotation is represented by one or more of these
+  canonical types. An annotation is not inherently associated with a specific
+  sample/individual (though a client could choose to use annotations in this
+  way). Example canonical annotation types are 'Gene' and 'Transcript'.
+*/
+record Annotation {
+  /** The generated unique ID for this annotation. */
+  string id;
+
+  /** The ID of the containing annotation set. */
+  string annotationSetId;
+
+  /** The display name of this annotation. */
+  string name;
+
+  /** The position of this annotation on the reference sequence. */
+  RangePosition position;
+
+  /**
+    The data type for this annotation. Must match the containing annotation
+    set's type.
+  */
+  Type type;
+
+  /** At most of the following payloads should be provided. */
+  Transcript transcript;
+  // More structured data types go here...
+
+  /** A map of additional annotation data. */
+  map<array<string>> info = {};
+}
+
+}
