@@ -71,8 +71,7 @@ record SearchVariantsRequest {
 
   /**
   Only return variant calls which belong to call sets with these IDs.
-  If an empty array, returns variants without any call objects.
-  If null, returns all variant calls.
+  If null or empty, returns all variant calls.
   */
   union { null, array<string> } callSetIds = null;
 
