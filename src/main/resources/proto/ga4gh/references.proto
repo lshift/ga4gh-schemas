@@ -61,6 +61,10 @@ message ReferenceSet {
   // The reference set name.
   string name = 2;
 
+  // The IDs of the reference objects that are part of this set.
+  // `Reference.md5checksum` must be unique within this set.
+  repeated string reference_ids = 10;
+
   // Order-independent MD5 checksum which identifies this `ReferenceSet`.
   //
   // To compute this checksum, make a list of `Reference.md5checksum` for all
