@@ -2,9 +2,9 @@ syntax = "proto3";
 
 package ga4gh;
 
-import "proto/ga4gh/common.proto";
-import "proto/ga4gh/metadata.proto";
-import "proto/google/protobuf/struct.proto";
+import "ga4gh/proto/ga4gh/common.proto";
+import "ga4gh/proto/ga4gh/metadata.proto";
+import "ga4gh/proto/google/protobuf/struct.proto";
 
 /*
 This file defines the objects used to represent a hierarchy of reads and
